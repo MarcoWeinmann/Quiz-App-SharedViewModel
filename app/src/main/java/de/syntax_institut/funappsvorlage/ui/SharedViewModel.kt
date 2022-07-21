@@ -33,12 +33,21 @@ class SharedViewModel : ViewModel() {
 
     // Diese Variable speichert, wie viel Geld bereits erspielt wurde
     // TODO
+    private var _moneyWon = MutableLiveData<Int>(0)
+    val moneyWon: LiveData<Int>
+    get() = _moneyWon
 
     // Diese Variable speichert, wie die letzte Frage beantwortet wurde
     // TODO
+    private var _lastAnswer = MutableLiveData<Boolean>(true)
+    val lastAnswer: LiveData<Boolean>
+    get() = _lastAnswer
 
     // Diese Variable speichert, ob die Millionenfrage beantwortet wurde
     // TODO
+    private var _wontheMillion = MutableLiveData<Boolean>(false)
+    val wontheMillion: LiveData<Boolean>
+    get() = _wontheMillion
 
     /**
      * Diese Funktion überprüft, ob die Frage richtig oder falsch beantwortet wurde und setzt die
@@ -52,11 +61,13 @@ class SharedViewModel : ViewModel() {
         if (answerIndex == _currentQuestion.value?.rightAnswer) {
 
             // TODO: erhöhe das erspielte Geld auf den Preis der aktuellen Preisstufe
+            _moneyWon.value = currentPrice.value
 
             // fall es die letzte Frage in der Liste war, setzte _wonTheMillion auf true,
             // sonst wechsle zur nächsten Frage
             if (questionIndex == questions!!.size - 1) {
                 // TODO: Millionen gewonnen
+                _wontheMillion.value = true
             } else {
                 questionIndex++
                 _currentQuestion.value = questions.get(questionIndex)
@@ -64,6 +75,7 @@ class SharedViewModel : ViewModel() {
             }
         } else {
             // TODO: letzte Frage wurde falsch beantwortet
+            _lastAnswer.value = false
         }
     }
 
@@ -76,5 +88,8 @@ class SharedViewModel : ViewModel() {
         _currentPrice.value = _currentQuestion.value?.price
 
         // TODO: Reset moneyWon, lastAnswer, wonTheMillion
+        _moneyWon.value = 0
+        _wontheMillion.value = false
+        _lastAnswer.value = true
     }
 }
